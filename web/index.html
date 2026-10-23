@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>TUNA DNS Client</title>
+<style>
+:root{color-scheme:dark;--bg:#10111b;--panel:#1c1e2e;--line:#34374e;--muted:#a7adc6;--accent:#b2a1ff;--green:#81debb;--red:#ffaaaa}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#eef0fa;font:14px 'Segoe UI',sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#292d43;color:inherit;border-radius:9px;padding:10px 15px}button:hover:not(:disabled){border-color:var(--accent)}button:disabled{opacity:.45;cursor:default}button.primary{background:var(--accent);color:#19152c;font-weight:650;border-color:transparent}button.danger{color:var(--red)}input,textarea,select{background:#121522;color:inherit;border:1px solid #454a64;border-radius:8px;padding:10px;width:100%}textarea{resize:vertical;min-height:110px;font-family:Consolas,monospace;font-size:13px}input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}label{display:block;color:var(--muted);margin:10px 0}label>input,label>select,label>textarea{margin-top:7px}h1{font-size:26px;margin:0 0 9px}h2{font-size:18px;margin:0 0 15px}p{line-height:1.65}.muted{color:var(--muted)}.small{font-size:12px}.app{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}aside{background:#151725;padding:30px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column}.brand{font-size:23px;font-weight:750;margin:0 8px}.brand span{color:var(--accent)}.brand-sub{font-size:12px;color:var(--muted);margin:7px 8px}nav{display:flex;flex-direction:column;gap:8px;margin-top:38px}nav button{text-align:left;border:0;background:transparent;color:var(--muted)}nav button.active{background:#34304e;color:#e6ddff}.side-note{margin:40px 8px 0;font-size:12px;line-height:1.8;color:var(--muted)}main{padding:28px 32px;max-width:1250px;width:100%}.head{display:flex;align-items:center;gap:14px;justify-content:space-between;margin-bottom:25px}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.row>*{flex-shrink:0}.row select{flex:1;min-width:180px}.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:22px;margin-bottom:18px}.hero{background:linear-gradient(115deg,#292440,#1b2033);padding:27px}.grid{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}.status{font-size:19px;display:flex;align-items:center;gap:10px}.dot{width:10px;height:10px;background:#8a8da0;border-radius:50%}.dot.on{background:var(--green);box-shadow:0 0 15px #81debb66}.endpoint{font:24px Consolas,monospace;margin:18px 0}.pill{background:#32364e;color:#d8dded;font-size:12px;border-radius:20px;padding:5px 9px}.notice{border-left:3px solid var(--accent);padding:12px 15px;background:#25233b;font-size:12px;line-height:1.7;color:#d0cbe6}.domain{display:flex;justify-content:space-between;gap:15px;padding:15px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.domain:last-child{border-bottom:0}.domain strong{display:block;margin-bottom:6px}.domain button{align-self:center}.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}.result{display:grid;grid-template-columns:25px 1fr auto;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:12px 2px;color:inherit;margin:0}.good{color:var(--green)}.bad{color:var(--red)}.toolbar{margin:16px 0}.error{border:1px solid #965b69;background:#3a2330;color:#ffced5;border-radius:9px;padding:13px;margin:0 0 18px;white-space:pre-wrap;overflow-wrap:anywhere}.toast{background:#253c37;color:#b1efd6;border-radius:9px;padding:12px;margin-bottom:18px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#11131f;border:1px solid var(--line);border-radius:9px;padding:16px;font:12px/1.6 Consolas,monospace;max-height:450px;overflow:auto}dialog{max-width:650px;width:90%;background:var(--panel);color:inherit;border:1px solid #55516c;border-radius:15px;padding:25px}dialog::backdrop{background:#050710bb}dialog textarea{min-height:150px}.close{float:right;padding:5px 10px}.empty{padding:38px 25px;text-align:center}.empty p{color:var(--muted)}[hidden]{display:none!important}.help{font-size:12px;line-height:1.7;color:var(--muted)}#results{max-height:460px;overflow:auto}#candidateCount{margin-left:auto}.checkrow{display:flex;align-items:center;gap:8px;color:inherit}details summary{cursor:pointer;color:var(--accent);padding:10px 0}@media(max-width:950px){.app{grid-template-columns:180px minmax(0,1fr)}main{padding:24px 20px}.grid{grid-template-columns:1fr}}@media(max-width:650px){.app{display:block}aside{padding:14px;border-right:0;border-bottom:1px solid var(--line)}nav{flex-direction:row;overflow:auto;margin-top:15px}nav button{white-space:nowrap}.side-note,.brand-sub{display:none}main{padding:20px 15px}.form{grid-template-columns:1fr}.head{align-items:flex-start;flex-direction:column}.domain{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside><div class="brand">TUNA <span>DNS</span></div><div class="brand-sub">Клиент для Windows</div>
+<nav aria-label="Основная навигация">
+<button data-page="connection" class="active">Подключение</button><button data-page="resolvers">DNS-резолверы</button><button data-page="export">SOCKS и экспорт</button><button data-page="settings">Параметры</button><button data-page="logs">Журнал</button>
+</nav><div class="side-note">MasterDNS / StormDNS<br>Один сервер — несколько доменов. Для каждого домена можно выбрать свой набор резолверов.</div></aside>
+<main>
+<div class="head"><div><h1 id="pageTitle">Подключение</h1><span class="muted small" id="connectionHint">Загрузка состояния…</span></div><button id="openImport" class="primary">+ Импорт профиля</button></div>
+<div id="error" class="error" role="alert" hidden></div><div id="toast" class="toast" role="status" hidden></div>
+<div class="card row" id="profileBar" hidden><label for="profiles" style="margin:0">Профиль</label><select id="profiles" aria-label="Профиль"></select><button id="deleteProfile" class="danger">Удалить</button></div>
+<div id="empty" class="card empty" hidden><h2>Добавьте свой DNS-профиль</h2><p>Вставьте ссылку StormDNS или TUNA, экспортированную вашим сервером или приложением.</p><button id="emptyImport" class="primary">Импортировать ссылку</button></div>
+<section id="page-connection">
+<div class="grid"><div><div class="card hero"><div class="status"><span id="statusDot" class="dot"></span><span id="statusText">Ожидание</span></div><div class="endpoint" id="endpoint">—</div><p class="muted">Локальный SOCKS5 для приложений и других прокси-клиентов.</p><div class="row"><button class="primary" id="connect">Подключить</button><button id="disconnect">Отключить</button></div></div>
+<div class="card"><h2>Проверка подключения</h2><p class="muted">Проверка выполняется через запущенный SOCKS5.</p><button id="probe">Проверить соединение</button><p id="probeResult" role="status" class="small muted"></p></div></div>
+<div class="card"><h2>Домены этого сервера</h2><div id="domains"></div><p class="help">Это входы на один сервер. Выбор резолверов хранится отдельно для каждого домена.</p></div></div>
+<div class="card"><h2>Ход подключения</h2><p id="connectionStage" role="status">Подключение не запущено</p><p id="connectionElapsed" class="small muted"></p><progress id="connectionProgress" hidden max="1" value="0" style="width:100%;height:16px;accent-color:var(--accent)" aria-label="Проверка резолверов при подключении"></progress><p id="connectionWait" class="small muted"></p><pre id="connectionEvents" style="max-height:230px;overflow:auto;white-space:pre-wrap" aria-label="События подключения"></pre></div><div class="notice">Чтобы приложения использовали туннель, настройте в них SOCKS5 или экспортируйте конфигурацию. Если другой VPN работает в режиме TUN, исключите <strong>tuna-dns-core.exe</strong> из его перехвата, иначе DNS-туннель может попасть внутрь этого VPN.</div>
+</section>
+<section id="page-resolvers" hidden>
+<div class="card"><h2>Поиск для выбранного домена</h2><label>Домен туннеля<select id="resolverDomain"></select></label><p id="selectionSummary" class="muted small"></p>
+<label>Адрес HTTPS-базы резолверов<input id="databaseUrl" type="url" value="https://raw.githubusercontent.com/blechschmidt/massdns/master/lists/resolvers.txt" autocomplete="off" spellcheck="false"></label><button id="downloadDatabase">Скачать базу</button>
+<label>Резолверы для проверки · каждый на отдельной строке<textarea id="candidates" spellcheck="false" placeholder="IP-адрес или IP:порт"></textarea></label><div class="row"><button id="profileCandidates">Взять из профиля</button><span id="candidateCount" class="small muted"></span></div>
+<label>Параллельные проверки (потоки) · 1–128<input id="scanWorkers" type="number" min="1" max="128" value="32" step="1" style="max-width:160px"></label><p class="help">Больше потоков — больше одновременных DNS-запросов. Начните с 32; при потерях ответов уменьшите значение.</p><div class="toolbar row"><button id="scan" class="primary">Проверить этот домен</button><button id="cancelScan">Остановить проверку</button><span id="scanStatus" class="small muted" role="status"></span></div><div id="scanProgressBox" hidden><progress id="scanProgress" max="1" value="0" style="width:100%;height:20px;accent-color:var(--accent)" aria-label="Прогресс проверки резолверов"></progress><p id="scanProgressText" class="small muted" role="status"></p></div>
+<p class="help">Проверяется именно пара «домен + резолвер». Проверка доступности и MTU не измеряет скорость и не определяет самый быстрый адрес.</p></div>
+<div class="card"><div class="row"><h2 style="margin:0">Результаты проверки</h2><span id="resultCount" class="pill">0</span></div><div class="toolbar row"><button id="selectWorking">Выбрать все рабочие</button><button id="clearSelection">Снять выбор</button></div><div id="results"></div><div class="toolbar row"><button class="primary" id="saveResolvers">Сохранить выбор для домена</button><button id="resetResolvers">Вернуть резолверы профиля</button></div><p id="checkedCount" class="small muted"></p><p class="help">Ограничения в три адреса нет. Пустой персональный набор отключает домен; хотя бы один домен должен оставаться рабочим.</p></div>
+</section>
+<section id="page-export" hidden><div class="card"><h2>Локальный SOCKS5</h2><div class="endpoint" id="exportEndpoint">—</div><button id="copyEndpoint">Копировать адрес</button><p class="notice">Адрес слушает только loopback этого компьютера. Доступ к нему могут получить другие локальные процессы. Не публикуйте этот порт в сеть.</p></div>
+<div class="card"><h2>Конфигурация другого клиента</h2><div class="form"><label>Клиент<select id="exportKind"><option value="singbox">sing-box</option><option value="xray">Xray</option></select></label><label>Формат<select id="exportFull"><option value="false">Только outbound</option><option value="true">Минимальный полный конфиг</option></select></label></div><button class="primary" id="generateExport">Создать JSON</button><pre id="exportText" hidden></pre><div class="row"><button id="copyExport" disabled>Копировать JSON</button><button id="downloadExport" disabled>Скачать JSON</button></div><p class="help">Экспорт направляет трафик в SOCKS5 TUNA DNS Client. Сам DNS-туннель продолжает обслуживать запущенное ядро TUNA; его нельзя останавливать во время использования экспортированной конфигурации.</p></div></section>
+<section id="page-settings" hidden><form id="settingsForm" class="card"><h2>Параметры профиля</h2><div class="form"><label>Имя<input id="settingName" required maxlength="200"></label><label>Порт локального SOCKS5<input id="settingPort" type="number" min="1" max="65535" required></label><label>Ключ сервера<input id="settingKey" type="password" autocomplete="off" required spellcheck="false"></label><label>Шифрование<select id="settingEncryption"><option value="0">0 · Без шифрования</option><option value="1">1 · XOR</option><option value="2">2 · ChaCha20</option><option value="3">3 · AES-128-GCM</option><option value="4">4 · AES-192-GCM</option><option value="5">5 · AES-256-GCM</option></select></label></div><label>Домены · по одному на строке<textarea id="settingDomains" required spellcheck="false"></textarea></label><label>Исходные резолверы профиля<textarea id="settingResolvers" required spellcheck="false"></textarea></label><details open><summary>Параметры ядра · JSON</summary><p class="help">Поля в исходном формате: MTU, ARQ, дублирование, сжатие, рабочие потоки и интервалы. Ключи используют snake_case. Ключ и метод шифрования должны совпадать с сервером.</p><textarea id="settingTuning" rows="14" spellcheck="false" required></textarea></details><div class="toolbar row"><button id="saveSettings" class="primary" type="submit">Сохранить параметры</button><button id="reloadSettings" type="button">Отменить правки</button></div><p class="help">Во время подключения и сканирования параметры недоступны. Сначала завершите текущую операцию.</p></form></section>
+<section id="page-logs" hidden><div class="card"><div class="row"><h2 style="margin:0">Журнал ядра и клиента</h2><button id="clearLog">Очистить</button><button id="copyLog">Копировать</button></div><pre id="logText">Журнал пока пуст.</pre></div></section>
+</main></div>
+<dialog id="importDialog"><button class="close" id="closeImport" aria-label="Закрыть">×</button><h2>Импорт профиля</h2><p class="muted">Вставьте одну ссылку вашего профиля. Она может содержать секретный ключ.</p><form id="importForm"><label>Ссылка<textarea id="importLink" required spellcheck="false" autocomplete="off" placeholder="stormdns://… или tuna://…"></textarea></label><div id="importError" class="error" role="alert" hidden></div><button class="primary" id="submitImport" type="submit">Добавить профиль</button></form></dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), token=location.hash.slice(1);
+let workersLoaded=false;
+let state=null,page='connection',busy=false,polling=false,profileIdentity='',domain='',checked=new Set(),resultsDigest='',profilesDigest='',settingsOriginal=null,exportValue='',toastTimer,requestEpoch=0;
+const titles={connection:'Подключение',resolvers:'DNS-резолверы',export:'SOCKS и экспорт',settings:'Параметры',logs:'Журнал'};
+const lines=value=>value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+const profile=()=>state?.profiles?.[state.selected]||null;
+const active=()=>!!state&&/connected|running|connecting|starting|подключено|подключение|работает/i.test(state.status||'')&&!/disconnected|not running|отключ/i.test(state.status||'');
+const scanning=()=>!!state?.scan?.running;
+function error(message){$('error').textContent=message;$('error').hidden=!message}
+function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,5000)}
+async function api(action,body={}){
+ if(!token)throw Error('Нет токена локальной сессии. Откройте интерфейс через TUNA DNS Client.');
+ const response=await fetch('/api',{method:'POST',headers:{'Content-Type':'application/json','X-Tuna-Token':token},body:JSON.stringify({action,...body}),cache:'no-store'});
+ let value;try{value=await response.json()}catch{throw Error('Локальный клиент вернул некорректный ответ.')}
+ if(!response.ok||value.error)throw Error(value.error||`Ошибка локального клиента (${response.status}).`);
+ return value;
+}
+async function run(action,body={},after){
+ if(busy)return;busy=true;requestEpoch++;error('');controls();
+ try{const value=await api(action,body);if(Array.isArray(value.profiles))accept(value);if(after)await after(value)}catch(e){error(e.message)}finally{busy=false;if(state)$('profiles').value=String(state.selected);controls()}
+}
+function accept(value){
+ if(state&&state.port!==value.port){exportValue='';$('exportText').hidden=true}state=value;const p=profile(),identity=String(state.selected)+'|'+(p?.name||'')+'|'+JSON.stringify(p?.domains||[]);
+ const optionsKey=JSON.stringify(state.profiles.map(p=>p.name))+'|'+state.selected;
+ if(optionsKey!==profilesDigest){profilesDigest=optionsKey;$('profiles').replaceChildren(...state.profiles.map((p,i)=>new Option(p.name||`Профиль ${i+1}`,String(i))));$('profiles').value=String(state.selected)}
+ if(identity!==profileIdentity){profileIdentity=identity;initializeProfile()}
+ $('profileBar').hidden=!p;$('empty').hidden=!!p;
+ $('connectionHint').textContent=p?p.name:'Профиль не выбран';
+ const labels={disconnected:'Отключено',connected:'Подключено',running:'Ядро работает',connecting:'Подключение…',starting:'Запуск…',stopped:'Отключено',error:'Ошибка ядра'};
+ $('statusText').textContent=labels[state.status]||state.status||'Отключено';$('statusDot').classList.toggle('on',state.status==='connected');renderConnection();
+ $('endpoint').textContent=$('exportEndpoint').textContent=`127.0.0.1:${state.port}`;
+ if(!workersLoaded){$('scanWorkers').value=state.scanWorkers||32;workersLoaded=true}renderDomains();renderResults();
+ const log=Array.isArray(state.logs)?state.logs.join('\n'):'';if($('logText').textContent!==(log||'Журнал пока пуст.')){const bottom=$('logText').scrollHeight-$('logText').scrollTop-$('logText').clientHeight<35;$('logText').textContent=log||'Журнал пока пуст.';if(bottom)$('logText').scrollTop=$('logText').scrollHeight}
+ controls();showPage();
+}
+
+function renderConnection(){
+ const c=state?.connection||{},pending=state?.status==='connecting',seconds=c.startedAt?Math.max(0,Math.floor((Date.now()-c.startedAt)/1000)):0;
+ $('connectionStage').textContent=(c.stage||'Подключение не запущено')+(pending&&c.retryAt?` · повтор через ${Math.max(0,Math.ceil((c.retryAt-Date.now())/1000))} с`:'');
+ $('connectionElapsed').textContent=(pending?`Ожидание: ${Math.floor(seconds/60)} мин ${seconds%60} с`:'')+(c.attempt?` · Попытка установки сессии: ${c.attempt}`:'')+(c.total?` · Проверено резолверов: ${c.done} из ${c.total}`:'');
+ $('connectionProgress').hidden=!pending||!c.total;$('connectionProgress').max=c.total||1;$('connectionProgress').value=c.done||0;
+ $('connectionWait').textContent=pending&&seconds>=60?'Подключение ещё не установлено. Ядро продолжает проверки и повторные попытки. При длительном ожидании проверьте доступность доменов, ключ сервера и выбранные резолверы.':'';
+ const target=$('connectionEvents'),text=(state?.logs||[]).slice(-25).join('\n');if(target.textContent!==text){const atBottom=target.scrollHeight-target.scrollTop-target.clientHeight<35;target.textContent=text;if(atBottom)target.scrollTop=target.scrollHeight}
+}
+
+function initializeProfile(){
+ const p=profile();domain=p?.domains?.includes(domain)?domain:(p?.domains?.[0]||'');
+ $('resolverDomain').replaceChildren(...(p?.domains||[]).map(d=>new Option(d,d)));$('resolverDomain').value=domain;
+ changeDomain(domain);fillSettings();$('probeResult').textContent='';exportValue='';$('exportText').hidden=true;
+}
+function changeDomain(value){domain=value;const p=profile();checked=new Set(p?.selected?.[domain]??p?.resolvers??[]);$('candidates').value=(p?.resolvers||[]).join('\n');resultsDigest='';renderResults();countCandidates()}
+function currentResults(){return state?.scan?.domain===domain?(state.scan.results||[]).filter(r=>r.domain===domain):[]}
+function chosen(domainName){const p=profile();return p?.selected&&Object.prototype.hasOwnProperty.call(p.selected,domainName)?p.selected[domainName]:null}
+function renderDomains(){
+ const p=profile();$('domains').replaceChildren();
+ for(const d of p?.domains||[]){const node=document.createElement('div');node.className='domain';const info=document.createElement('div'),name=document.createElement('strong'),sub=document.createElement('span'),button=document.createElement('button');name.textContent=d;sub.className='small muted';const own=chosen(d);sub.textContent=own===null?`Из профиля · ${p.resolvers.length} адресов`:`Мой набор · ${own.length} адресов${own.length?'':' · домен отключён'}`;info.append(name,sub);button.textContent='Резолверы';button.addEventListener('click',()=>{go('resolvers');$('resolverDomain').value=d;changeDomain(d)});node.append(info,button);$('domains').append(node)}
+ const own=chosen(domain);$('selectionSummary').textContent=profile()?(own===null?`Сейчас используются резолверы профиля: ${p.resolvers.length}`:`Сохранён персональный набор: ${own.length}${own.length?'':' · домен отключён'}`):'';
+}
+function renderResults(){
+ const results=currentResults(),digest=JSON.stringify(results);$('resultCount').textContent=`${results.filter(r=>r.valid).length} рабочих / ${results.length}`;
+ const scan=state?.scan,matching=scan?.domain===domain,total=matching?(scan.total||0):0,done=matching?Math.min(scan.done||0,total):0;
+ $('scanProgressBox').hidden=!total;$('scanProgress').max=total||1;$('scanProgress').value=done;$('scanProgressText').textContent=`Проверено ${done} из ${total} · ${total?Math.floor(done*100/total):0}% · потоков: ${scan?.workers||32} · рабочих: ${results.filter(r=>r.valid).length}`;
+ $('scanStatus').textContent=scanning()?`Проверяется: ${state.scan.domain}`:(scan?.error||(total?'Проверка завершена':'Проверка не запущена'));
+ if(digest!==resultsDigest){resultsDigest=digest;$('results').replaceChildren();
+  if(!results.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='Результатов для этого домена пока нет.';$('results').append(empty)}
+  for(const r of results){const label=document.createElement('label');label.className='result';const input=document.createElement('input');input.type='checkbox';input.disabled=!r.valid||scanning()||busy;input.checked=!!r.valid&&checked.has(r.resolver);input.dataset.resolver=r.resolver;input.addEventListener('change',()=>{input.checked?checked.add(r.resolver):checked.delete(r.resolver);countChecked()});const name=document.createElement('span');name.textContent=r.resolver;const detail=document.createElement('span');detail.className='small '+(r.valid?'good':'bad');detail.textContent=r.valid?`MTU ↑ ${r.upload??'—'} / ↓ ${r.download??'—'}`:'Нет ответа';label.append(input,name,detail);$('results').append(label)}
+ }countChecked();
+}
+function countCandidates(){$('candidateCount').textContent=`Адресов: ${lines($('candidates').value).length}`}
+function countChecked(){$('checkedCount').textContent=`Выбрано рабочих адресов: ${currentResults().filter(r=>r.valid&&checked.has(r.resolver)).length}`}
+function controls(){
+ const p=profile(),locked=busy||active()||scanning();
+ for(const id of ['connect','deleteProfile','profiles','scan','downloadDatabase','profileCandidates','saveResolvers','resetResolvers'])$(id).disabled=!p||locked;
+ $('saveResolvers').disabled=!p||locked||!currentResults().length;
+ $('connect').disabled=!p||locked;$('disconnect').disabled=!active()||busy;$('cancelScan').disabled=!scanning()||busy;$('probe').disabled=state?.status!=='connected'||busy;
+ $('scanWorkers').disabled=!p||locked;$('resolverDomain').disabled=!p||busy||scanning();$('candidates').disabled=!p||locked;$('databaseUrl').disabled=!p||locked;
+ for(const element of $('settingsForm').elements)element.disabled=!p||locked;
+ for(const id of ['openImport','emptyImport','submitImport'])$(id).disabled=locked;
+ for(const id of ['selectWorking','clearSelection'])$(id).disabled=!p||locked||!currentResults().length;
+ for(const input of $('results').querySelectorAll('input')){const row=currentResults().find(r=>r.resolver===input.dataset.resolver);input.disabled=!row?.valid||busy||scanning()||active()}
+ $('generateExport').disabled=!p||busy;$('copyExport').disabled=$('downloadExport').disabled=!exportValue;$('clearLog').disabled=busy;
+}
+function showPage(){for(const key of Object.keys(titles))$('page-'+key).hidden=page!==key||(!profile()&&key!=='logs');$('pageTitle').textContent=titles[page];document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page))}
+function go(next){page=next;showPage()}
+function fillSettings(){const p=profile();settingsOriginal=p?JSON.parse(JSON.stringify(p)):null;$('settingName').value=p?.name||'';$('settingPort').value=state?.port||1080;$('settingKey').value=p?.key||'';$('settingEncryption').value=String(p?.encryption??5);$('settingDomains').value=(p?.domains||[]).join('\n');$('settingResolvers').value=(p?.resolvers||[]).join('\n');$('settingTuning').value=JSON.stringify(p?.tuning||{},null,2)}
+async function copy(value){try{await navigator.clipboard.writeText(value);toast('Скопировано')}catch{error('Буфер обмена недоступен. Выделите текст и скопируйте его вручную.')}}
+function openImport(){$('importError').hidden=true;$('importDialog').showModal();$('importLink').focus()}
+document.querySelectorAll('nav button').forEach(button=>button.addEventListener('click',()=>go(button.dataset.page)));
+$('openImport').onclick=$('emptyImport').onclick=openImport;$('closeImport').onclick=()=>$('importDialog').close();
+$('importForm').onsubmit=async event=>{event.preventDefault();if(busy)return;busy=true;requestEpoch++;controls();$('importError').hidden=true;try{accept(await api('import',{link:$('importLink').value.trim()}));$('importLink').value='';$('importDialog').close();toast('Профиль добавлен')}catch(e){$('importError').textContent=e.message;$('importError').hidden=false}finally{busy=false;controls()}};
+$('profiles').onchange=()=>run('select',{index:Number($('profiles').value)});
+$('deleteProfile').onclick=()=>{if(confirm('Удалить выбранный профиль и его персональные наборы резолверов?'))run('delete',{index:state.selected},()=>toast('Профиль удалён'))};
+$('connect').onclick=()=>run('connect');$('disconnect').onclick=()=>run('disconnect');$('probe').onclick=()=>run('probe',{},value=>{$('probeResult').textContent=value.message||'Проверка завершена'});
+$('resolverDomain').onchange=()=>changeDomain($('resolverDomain').value);$('candidates').oninput=countCandidates;
+$('profileCandidates').onclick=()=>{$('candidates').value=(profile()?.resolvers||[]).join('\n');countCandidates()};
+$('downloadDatabase').onclick=()=>{let url;try{url=new URL($('databaseUrl').value);if(url.protocol!=='https:')throw Error()}catch{error('Укажите полный HTTPS-адрес базы резолверов.');return}run('database',{url:url.href},value=>{$('candidates').value=(value.resolvers||[]).join('\n');countCandidates();toast('База загружена. Теперь запустите проверку домена.')})};
+$('scan').onclick=()=>{const resolvers=lines($('candidates').value);if(!resolvers.length){error('Добавьте адреса для проверки.');return}const workers=Number($('scanWorkers').value);if(!Number.isInteger(workers)||workers<1||workers>128){error('Укажите число потоков от 1 до 128.');return}run('scan',{domain,resolvers,workers})};$('cancelScan').onclick=()=>run('cancelScan');
+$('selectWorking').onclick=()=>{for(const r of currentResults())if(r.valid)checked.add(r.resolver);resultsDigest='';renderResults();controls()};$('clearSelection').onclick=()=>{checked.clear();resultsDigest='';renderResults();controls()};
+$('saveResolvers').onclick=()=>run('selectResolvers',{domain,resolvers:[...new Set(currentResults().filter(r=>r.valid&&checked.has(r.resolver)).map(r=>r.resolver))]},()=>toast('Набор для домена сохранён'));
+$('resetResolvers').onclick=()=>run('resetResolvers',{domain},()=>{checked=new Set(profile()?.resolvers||[]);resultsDigest='';renderResults();toast('Для домена восстановлены резолверы профиля')});
+$('reloadSettings').onclick=()=>{fillSettings();toast('Несохранённые правки отменены')};
+$('settingsForm').onsubmit=event=>{event.preventDefault();let tuning;try{tuning=JSON.parse($('settingTuning').value);if(!tuning||typeof tuning!=='object'||Array.isArray(tuning))throw Error()}catch{error('Параметры ядра должны быть корректным JSON-объектом.');return}const domains=lines($('settingDomains').value),p={...settingsOriginal,name:$('settingName').value.trim(),key:$('settingKey').value,encryption:Number($('settingEncryption').value),domains,resolvers:lines($('settingResolvers').value),tuning};p.selected=Object.fromEntries(Object.entries(p.selected||{}).filter(([d])=>domains.includes(d)));run('settings',{profile:p,port:Number($('settingPort').value)},()=>{fillSettings();toast('Параметры сохранены')})};
+$('copyEndpoint').onclick=()=>copy(`127.0.0.1:${state.port}`);
+$('generateExport').onclick=()=>run('export',{kind:$('exportKind').value,full:$('exportFull').value==='true'},value=>{exportValue=value.text||'';$('exportText').textContent=exportValue;$('exportText').hidden=false});
+for(const id of ['exportKind','exportFull'])$(id).onchange=()=>{exportValue='';$('exportText').hidden=true;controls()};
+$('copyExport').onclick=()=>copy(exportValue);$('downloadExport').onclick=()=>{const url=URL.createObjectURL(new Blob([exportValue],{type:'application/json;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`tuna-dns-${$('exportKind').value}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$('clearLog').onclick=()=>run('clearLog');$('copyLog').onclick=()=>copy((state?.logs||[]).join('\n'));
+async function poll(){if(polling||busy)return;polling=true;const epoch=requestEpoch;try{const value=await api('state');if(epoch===requestEpoch&&!busy)accept(value)}catch(e){if(epoch===requestEpoch&&!busy)error(e.message)}finally{polling=false}}
+controls();poll();setInterval(poll,1000);setInterval(()=>{if(state)renderConnection()},1000);
+</script>
+</body></html>
